@@ -22,17 +22,19 @@ def writeToBeginningOfFile(path, content):
 # ----------------------------------------- 🛑🛑 run code from directory 🛑🛑  ----------------------------
 current_path = (Path.cwd())
 print(Path.cwd())
+src_path = "src"
 component_folder = "components"
 page_folder = "pages"
 style_folder = "styles"
 public_folder = "public"
 images_folder = "images"
 
-component_directory = os.path.join(current_path, component_folder)
-page_directory = os.path.join(current_path, page_folder)
-styles_directory = os.path.join(current_path, style_folder)
-public_directory = os.path.join(current_path, public_folder)
-images_directory = os.path.join(current_path, images_folder)
+path_src = os.path.join(current_path, src_path)
+component_directory = os.path.join(path_src, component_folder)
+page_directory = os.path.join(path_src, page_folder)
+styles_directory = os.path.join(path_src, style_folder)
+public_directory = os.path.join(path_src, public_folder)
+images_directory = os.path.join(path_src, images_folder)
 
 component_path = './src/components'
 page_path = './src/pages/'
