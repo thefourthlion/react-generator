@@ -21,28 +21,46 @@ def writeToBeginningOfFile(path, content):
 # ----------------------------------------- Set according to directory  ----------------------------
 # ----------------------------------------- 🛑🛑 run code from directory 🛑🛑  ----------------------------
 current_path = (Path.cwd())
-print(Path.cwd())
-src_path = "src"
+src_folder = "src"
 component_folder = "components"
 page_folder = "pages"
 style_folder = "styles"
 public_folder = "public"
 images_folder = "images"
 
-path_src = os.path.join(current_path, src_path)
+path_src = os.path.join(current_path, src_folder)
+print(path_src)
+
+images_directory = os.path.join(current_path, images_folder)
+
 component_directory = os.path.join(path_src, component_folder)
 page_directory = os.path.join(path_src, page_folder)
 styles_directory = os.path.join(path_src, style_folder)
 public_directory = os.path.join(path_src, public_folder)
-images_directory = os.path.join(path_src, images_folder)
 
 component_path = './src/components'
 page_path = './src/pages/'
+src_path = "./src/"
 style_path = "./src/styles/"
 public_path = "./public/"
 images_path = "./public/images"
 
 def create_paths():
+  # ----------------------------------------- Create public directory ----------------------------
+  if os.path.exists(src_path):
+    print("⭐ src path exists.")
+  else:
+    print("✅ src directory created.")
+    os.mkdir(src_path)
+    
+    
+  # ----------------------------------------- Create public directory ----------------------------
+  if os.path.exists(public_path):
+    print("⭐ Public path exists.")
+  else:
+    print("✅ Public directory created.")
+    os.mkdir(public_path)
+    
   # ----------------------------------------- Create component directory ----------------------------
   if os.path.exists(component_path):
     print("⭐ Component path exists.")
@@ -64,13 +82,7 @@ def create_paths():
     print("✅ Style directory created.")
     os.mkdir(style_path)
     
-  # ----------------------------------------- Create public directory ----------------------------
-  if os.path.exists(public_path):
-    print("⭐ Public path exists.")
-  else:
-    print("✅ Public directory created.")
-    os.mkdir(public_path)
-    
+
   # ----------------------------------------- Create public directory ----------------------------
   if os.path.exists(images_path):
     print("⭐ Images path exists.")
@@ -95,7 +107,7 @@ def create_pages(page_name):
     writeToFile(page_file_path, page_content)
     writeToFile(page_style_path, styles_content)
     print("✅ Scss added to page.")
-    writeToBeginningOfFile(f"{current_path}/App.js", styles_import)
+    writeToBeginningOfFile(f"{src_path}/App.js", styles_import)
     
     
 def create_components(folder_name, component_name):
@@ -125,7 +137,7 @@ def create_components(folder_name, component_name):
       print("✅ Component js file created.")
       writeToFile(component_file_folder_path, component_content)
       writeToFile(component_style_folder_path, styles_content)
-      writeToBeginningOfFile(f"{current_path}/App.js", styles_import)
+      writeToBeginningOfFile(f"{src_path}/App.js", styles_import)
   else:
     if os.path.exists(component_file_path):
       print("⭐ This component already exists")
@@ -133,7 +145,7 @@ def create_components(folder_name, component_name):
       print("✅ Component js file created.")
       writeToFile(component_file_path, component_content)
       writeToFile(component_style_path, styles_content)
-      writeToBeginningOfFile(f"{current_path}/App.js", styles_import)
+      writeToBeginningOfFile(f"{src_path}/App.js", styles_import)
 
 def create_git_ignore():
   git_ignore_file_path = f"{current_path}/.gitignore"
@@ -156,22 +168,62 @@ def create_package_json():
 def create_index_page():
   index_style_path = f"{style_path}/index.scss"
   index_style_content = "body { margin: 0; box-sizing: border-box; } "
-  index_page_path = f"{page_path}/index.js"
+  index_current_path = f"{src_path}/index.js"
   index_page_content = 'import React from "react"; import ReactDOM from "react-dom/client"; import "./styles/index.css"; import App from "./App"; const root = ReactDOM.createRoot(document.getElementById("root")); root.render( <React.StrictMode> <App /> </React.StrictMode> ); '
-  if os.path.exists(f"{page_path}/index.js"):
+  if os.path.exists(f"{src_path}/index.js"):
     print("⭐ The index.js already exists")
   else:
     print("✅ index.js file created.")
-    writeToFile(index_page_path, index_page_content)
+    writeToFile(index_current_path, index_page_content)
     print("✅ index.scss file created.")
     writeToFile(index_style_path, index_style_content)
+    
+def create_home_page():
+  home_style_path = f"{style_path}/Home.scss"
+  home_style_content = ".Home { } "
+  home_current_path = f"{page_path}/Home.js"
+  home_page_content = 'import React from "react"; import "../styles/Home.css"; const Home = () => { return ( <div className="Home pages"> <h1>Home</h1> </div> ); }; export default Home;'
+  if os.path.exists(f"{page_path}/Home.js"):
+    print("⭐ The Home.js already exists")
+  else:
+    print("✅ Home.js file created.")
+    writeToFile(home_current_path, home_page_content)
+    print("✅ Home.scss file created.")
+    writeToFile(home_style_path, home_style_content)
+    
+def create_index_html_page():
+  index_current_path = f"{public_path}/index.html"
+  index_page_content = '<!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8" /> <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- important SEO metadata --> <meta name="author" content="John Doe"> <meta name="keywords" content="website, services, products, information"> <meta name="description" content="Website description" /> <!-- important Social Media metadata --> <meta property="og:title" content="My Website - Home"> <meta property="og:description" content="Welcome to my website. Find information about our services and products."> <meta property="og:image" content="%PUBLIC_URL%/images/image.webp"> <!-- favicon / website icon --> <link rel="icon" href="%PUBLIC_URL%/images/favicon.ico" /> <title>Client</title> </head> <body> <div id="root"></div> <script src="https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js" crossorigin></script> <script src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js" crossorigin></script> <script src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script> </body> </html>'
+  if os.path.exists(f"{public_path}/index.html"):
+    print("⭐ The index.html already exists")
+  else:
+    print("✅ index.html file created.")
+    writeToFile(index_current_path, index_page_content)
+    
+def create_robots_txt():
+  robots_current_path = f"{public_path}/robots.txt"
+  robots_page_content = 'User-agent: \n* Disallow:'
+  if os.path.exists(f"{public_path}/robots.txt"):
+    print("⭐ The robots.txt already exists")
+  else:
+    print("✅ robots.txt file created.")
+    writeToFile(robots_current_path, robots_page_content)
+   
+def create_readme():
+  readme_current_path = f"{current_path}/README.md"
+  readme_page_content = '''## Installation \n \n To run this application locally, follow these steps: \n \n 1. Make sure you have Node.js installed on your machine. You can download it from [nodejs.org](https://nodejs.org). \n \n 2. Clone this repository to your local machine or download the source code. \n \n 3. Open a terminal or command prompt and navigate to the project's root directory. \n \n 4. Run the following command to install the required dependencies: \n \n npm install \n \n This will install all the necessary packages and dependencies specified in the `package.json` file. \n \n ## Usage \n \n Once you have installed the dependencies, you can run the application using the following command: \n \n npm start \n \n This will start the development server and open the application in your default web browser. If it doesn't open automatically, you can access the app by navigating to [http://localhost:3000](http://localhost:3000) in your browser. \n \n ## Contributing \n \n Contributions are welcome! If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request. \n \n ## License \n \n This project is licensed under the [MIT License](LICENSE).'''
+  if os.path.exists(f"{current_path}/README.md"):
+    print("⭐ The readme already exists")
+  else:
+    print("✅ readme file created.")
+    writeToFile(readme_current_path, readme_page_content) 
     
 def create_app_page():
   app_style_path = f"{style_path}/globals.scss"
   app_style_content = ".Home{}"
-  app_page_path = f"{current_path}/App.js"
+  app_page_path = f"{src_path}/App.js"
   app_page_content = 'import React from "react"; import Home from "./pages/Home"; import { BrowserRouter, Routes, Route } from "react-router-dom"; import "bootstrap/dist/css/bootstrap.min.css"; const App = () => { return ( <div className="App"> <BrowserRouter> <Routes> <Route path="/"> <Route index element={<Home />} /> <Route path="Home" element={<Home />} /> </Route> </Routes> </BrowserRouter> </div> ); }; export default App; '
-  if os.path.exists(f"{current_path}/App.js"):
+  if os.path.exists(f"{src_path}/App.js"):
     print("⭐ The app.js already exists")
   else:
     print("✅ app.js file created.")
@@ -185,6 +237,10 @@ create_paths()
 create_git_ignore()
 create_package_json()
 create_index_page()
+create_index_html_page()
+create_home_page()
+create_robots_txt()
+create_readme()
 create_app_page()
 
 create_page = input("Would you like to create a page? [Y or N]")
