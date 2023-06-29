@@ -97,7 +97,7 @@ def create_pages(page_name):
   styles_content = f".{page_name}" + "{}"
   page_file_path = f"{page_directory}/{page_name}.js"
   page_content = 'import React from "react"; const '+page_name+' = () => { return ( <div className="'+page_name+'"> <div className="container"> <h1 className="content-header">'+page_name+'</h1> </div> </div> ); }; export default '+page_name+';'
-  styles_import = f'import "../styles/{page_name}.scss";'
+  styles_import = f'import "./styles/{page_name}.css";'
   
   # ----------------------------------------- Create page if it doesn't exist ------------------
   if os.path.exists(page_file_path):
@@ -254,4 +254,3 @@ while(create_component.lower() == "y"):
   component_name = input("What would you like to call the component? [String}")
   create_components("", component_name)
   create_component = input("Would you like to create a component? [Y or N]")
-
