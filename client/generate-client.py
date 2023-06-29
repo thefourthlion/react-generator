@@ -96,7 +96,7 @@ def create_pages(page_name):
   page_style_path = f"{styles_directory}/{page_name}.scss"
   styles_content = f".{page_name}" + "{}"
   page_file_path = f"{page_directory}/{page_name}.js"
-  page_content = 'import React from "react"; const '+page_name+' = () => { return ( <div className="'+page_name+'"> <div className="container"> <h1 className="content-header">'+page_name+'</h1> </div> </div> ); }; export default '+page_name+';'
+  page_content = 'import React from "react"; \n const '+page_name+' = () => { \n return ( \n <div className="'+page_name+'"> \n <div className="container"> \n <h1 className="content-header">'+page_name+'</h1> \n </div> \n </div> \n ); \n }; \n export default '+page_name+';'
   styles_import = f'import "./styles/{page_name}.css";'
   
   # ----------------------------------------- Create page if it doesn't exist ------------------
@@ -120,7 +120,7 @@ def create_components(folder_name, component_name):
   # ----------------------------------------- component path and content ----------------------------
   component_file_path = f"{component_directory}/{component_name}.js"
   component_file_folder_path = f"{component_directory}/{folder_name}/{component_name}.js"
-  component_content = 'import React from "react"; const '+component_name+' = () => { return ( <div className="'+component_name+'"> <div className="container"> <h1 className="content-header">'+component_name+'</h1> </div> </div> ); }; export default '+component_name+';'
+  component_content = 'import React from "react"; \n const '+component_name+' = () => { \n return ( \n <div className="'+component_name+'"> \n <div className="container"> \n <h1 className="content-header">'+component_name+'</h1> \n </div> \n </div> \n ); \n }; \n export default '+component_name+';'
   
   # ----------------------------------------- create component if it doesn't exist ----------------------------
   if os.path.exists(f"{component_directory}/{folder_name}/"):
@@ -169,7 +169,7 @@ def create_index_page():
   index_style_path = f"{style_path}/index.scss"
   index_style_content = "body { margin: 0; box-sizing: border-box; } "
   index_current_path = f"{src_path}/index.js"
-  index_page_content = 'import React from "react"; import ReactDOM from "react-dom/client"; import "./styles/index.css"; import App from "./App"; const root = ReactDOM.createRoot(document.getElementById("root")); root.render( <React.StrictMode> <App /> </React.StrictMode> ); '
+  index_page_content = 'import React from "react"; \n import ReactDOM from "react-dom/client"; \n import "./styles/index.css"; \n import App from "./App"; \n const root = ReactDOM.createRoot(document.getElementById("root")); \n root.render( \n <React.StrictMode> \n <App /> \n </React.StrictMode> \n ); '
   if os.path.exists(f"{src_path}/index.js"):
     print("⭐ The index.js already exists")
   else:
@@ -182,7 +182,7 @@ def create_home_page():
   home_style_path = f"{style_path}/Home.scss"
   home_style_content = ".Home { } "
   home_current_path = f"{page_path}/Home.js"
-  home_page_content = 'import React from "react"; import "../styles/Home.css"; const Home = () => { return ( <div className="Home pages"> <h1>Home</h1> </div> ); }; export default Home;'
+  home_page_content = 'import React from "react"; \n import "../styles/Home.css"; \n const Home = () => { \n return ( \n <div className="Home pages"> \n <h1>Home</h1> \n </div> \n ); \n }; \n export default Home; '
   if os.path.exists(f"{page_path}/Home.js"):
     print("⭐ The Home.js already exists")
   else:
@@ -222,7 +222,7 @@ def create_app_page():
   app_style_path = f"{style_path}/globals.scss"
   app_style_content = ".Home{}"
   app_page_path = f"{src_path}/App.js"
-  app_page_content = 'import React from "react"; import Home from "./pages/Home"; import { BrowserRouter, Routes, Route } from "react-router-dom"; import "bootstrap/dist/css/bootstrap.min.css"; const App = () => { return ( <div className="App"> <BrowserRouter> <Routes> <Route path="/"> <Route index element={<Home />} /> <Route path="Home" element={<Home />} /> </Route> </Routes> </BrowserRouter> </div> ); }; export default App; '
+  app_page_content = 'import React from "react"; \n import Home from "./pages/Home"; \n import { BrowserRouter, Routes, Route } from "react-router-dom"; \n import "bootstrap/dist/css/bootstrap.min.css"; \n const App = () => { \n return ( \n <div className="App"> \n <BrowserRouter> \n <Routes> \n <Route path="/"> \n <Route index element={<Home />} /> \n <Route path="Home" element={<Home />} /> \n </Route> \n </Routes> \n </BrowserRouter> \n </div> \n ); \n }; \n export default App; '
   if os.path.exists(f"{src_path}/App.js"):
     print("⭐ The app.js already exists")
   else:
