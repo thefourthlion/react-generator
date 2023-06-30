@@ -2,15 +2,15 @@
 
 import os.path
 from os import path
+import os
+from pathlib import Path
 
-# ----------------------------------------- Set according to directory - var ----------------------------
-current_path = (r"Z:\programming\gameCatalog\server")
-
+# ----------------------------------------- Set according to current directory ----------------------------
+current_path = (Path.cwd())
 
 # ------------------------------------------- Global Variables ---------------------------------------------
 users_choice = "yes"
 db_items = []
-
 
 # ------------------------------------------------------ functions -----------------------------------------------
 def create_config_files():
@@ -70,7 +70,7 @@ def create_routes_files(name):
         return print("Something Went Wrong When Creating routes Files...")
         
 def create_index_file(name):
-    index_file = 'const express = require("express"); const session = require("express-session"); const passport = require("passport"); const app = express(); const cors = require("cors"); const PORT = process.env.PORT || 3002; const User = require("./models/auth"); const connectDB = require("./config/mongoose"); require("dotenv").config({ path: "./.env" }); app.use(express.json()); app.use(express.urlencoded({ extended: false })); app.use(cors()); connectDB(); const LocalStrategy = require("passport-local").Strategy; passport.use(new LocalStrategy(User.authenticate())); app.use( session({ secret: process.env.ENCRYPT_KEY, resave: false, saveUninitialized: false, }) ); app.use(passport.initialize()); app.use(passport.session()); passport.use(User.createStrategy()); passport.serializeUser(function (user, done) { done(null, user.id); }); passport.deserializeUser(function (id, done) { User.findById(id, function (err, user) { done(err, user); }); }); app.get("/", (req, res) => { res.json({ app: "running" }); }); app.listen(PORT, () => { console.log("✅ Listening on port " + PORT); }); app.use("/api/' + name + '", require("./routes/' + name + '"));'
+    index_file = 'const express = require("express"); const session = require("express-session");  const app = express(); const cors = require("cors"); const PORT = process.env.PORT || 3002;  const connectDB = require("./config/mongoose"); require("dotenv").config({ path: "./.env" }); app.use(express.json()); app.use(express.urlencoded({ extended: false })); app.use(cors()); connectDB();  app.get("/", (req, res) => { res.json({ app: "running" }); }); app.listen(PORT, () => { console.log("✅ Listening on port " + PORT); }); app.use("/api/' + name + '", require("./routes/' + name + '"));'
     index_file_path = f'{current_path}/index.js'
     # try:
     if path.exists("./index.js"):
@@ -84,24 +84,9 @@ def create_index_file(name):
     # except:
         # return print("Something Went Wrong When Creating index.js Files...")
 
-def create_auth_files():
-    auth_controller_file = 'const User = require("../models/auth"); const jwt = require("jsonwebtoken"); const passport = require("passport"); exports.registerUser = async (req, res, next) => { try { const user = new User({ username: req.body.username, email: req.body.email, phoneNumber: req.body.phoneNumber, password: req.body.password, }); const accessToken = jwt.sign( { id: user.id, username: user.username, }, process.env.JWT_ENCRYPT_KEY, { expiresIn: "3m", } ); User.register(user, req.body.password, (err, user) => { if (err) { console.log(err); res.send(err); } else { passport.authenticate("local")(req, res, () => { res.json({ accessToken: accessToken, username: user.username, }); console.log("user registered"); }); } }); } catch (err) { next(err); } }; exports.loginUser = async (req, res) => { try { const user = new User({ username: req.body.username, }); const accessToken = jwt.sign( { id: user.id, username: user.username, }, process.env.JWT_ENCRYPT_KEY, { expiresIn: "3m", } ); const refreshToken = jwt.sign( { id: user.id, username: user.username, }, process.env.JWT_ENCRYPT_KEY, { expiresIn: "20m", } ); req.login(user, (err) => { if (err) { console.log(err); res.send(err); } else { passport.authenticate("local")(req, res, () => { res.json({ accessToken: accessToken, refreshToken: refreshToken, username: user.username, }); console.log("user logged in"); }); } }); } catch (err) { console.log(err); } }; exports.deleteUser = async (req, res) => { try { if ((await User.findById(req.params.id)) === null) { res.send("User Not Found"); } else { await User.findByIdAndRemove(req.params.id).exec(); res.send("Deleted User"); } } catch (err) { console.log(err); } }; exports.logUsers = async (req, res) => { console.log("Log user called"); User.find({}, (err, result) => { if (err) { res.send({ app: err }); } else { res.send(result); } }); }; '
-    auth_model_file = 'const mongoose = require("mongoose"); const passportLocalMongoose = require("passport-local-mongoose"); const findOrCreate = require("mongoose-findorcreate"); const UserSchema = new mongoose.Schema( { username: { type: String, required: [true, "Please provide a username"], unique: [true, "Username already taken"], }, email: { type: String, required: [true, "Please provide an email address"], unique: [true, "Email address already taken"], }, phoneNumber: { type: String,  }, profilePic: { type: String,  }, }, { timestamps: true } ); UserSchema.plugin(passportLocalMongoose); UserSchema.plugin(findOrCreate); module.exports = mongoose.model("User", UserSchema); '
-    auth_route_file = 'const express = require("express"); const router = express.Router(); const { registerUser, loginUser, logUsers, deleteUser, } = require("../controllers/auth"); router.route("/register").post(registerUser); router.route("/login").post(loginUser); router.route("/allUsers").get(logUsers); router.route("/delete/:id").delete(deleteUser); module.exports = router;'
-    auth_controller_file_path = controller_directory + '/auth.js'
-    auth_model_file_path = model_directory + '/auth.js'
-    auth_route_file_path = route_directory + '/auth.js'
-    try:
-        write_to_file(auth_controller_file_path, auth_controller_file)
-        write_to_file(auth_model_file_path, auth_model_file)
-        write_to_file(auth_route_file_path, auth_route_file)
-        return print("Auth Files Successfully Created...")
-    except:
-        return print("Something Went Wrong When Creating Auth Files...")
-
 def create_package_file( ):
-    package_file = '{ "name": "generate-mongo-db", "version": "1.0.0", "description": "", "main": "index.js", "scripts": { "test": "echo \\"Error: no test specified\\" && exit 1" }, "keywords": [], "author": "", "license": "ISC", "dependencies": { "cors": "^2.8.5", "dotenv": "^16.0.3", "express": "^4.18.2", "express-session": "^1.17.3", "jsonwebtoken": "^8.5.1", "mongoose": "^6.7.0", "mongoose-findorcreate": "^3.0.0", "nodemon": "^2.0.20", "passport": "^0.6.0", "passport-local": "^1.0.0", "passport-local-mongoose": "^7.1.2" } } '
-    package_file_path = current_path + f'/package.json'
+    package_file = '{ "name": "generate-mongo-db", "version": "1.0.0", "description": "", "main": "index.js", "scripts": { "test": "echo \\"Error: no test specified\\" && exit 1" }, "keywords": [], "author": "", "license": "ISC", "dependencies": { "cors": "^2.8.5", "dotenv": "^16.0.3", "express": "^4.18.2", "express-session": "^1.17.3", "jsonwebtoken": "^8.5.1", "mongoose": "^6.7.0", "mongoose-findorcreate": "^3.0.0", "nodemon": "^2.0.20" } } '
+    package_file_path = os.path.join(current_path, 'package.json')
     try:
         write_to_file(package_file_path, package_file)
         return print("package Files Successfully Created...")
@@ -147,13 +132,12 @@ if os.path.exists(route_directory):
 else:
   os.mkdir(route_directory)
 
-
 # ----------------------------------------- Call everything ----------------------------
 type_of_db = input("What are you storing in the DB?")
-db_item_amount = input("How many items do you need in each document?")
+db_item_amount = input("How many objects do you need in each document?")
 db_item_amount_list = [0] * int(db_item_amount)
 for item in db_item_amount_list:
-  db_item_name = input("Name of the item you want in the document?")
+  db_item_name = input("Name of the object you want in the document?")
   db_items.append(db_item_name)
 
 print("Adding config files...")
@@ -163,9 +147,7 @@ create_controller_files(type_of_db, db_items)
 print("Adding route files...")
 create_routes_files(type_of_db)
 print("Adding model files...")
-create_models_files(type_of_db, db_items)
-print("Adding auth files...")
-create_auth_files()
+create_models_files(type_of_db, db_items) 
 print("Adding index file...")
 create_index_file(type_of_db)
 print("Adding json package file...")
