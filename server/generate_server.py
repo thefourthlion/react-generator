@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import os.path
 from os import path
 import os
@@ -9,7 +8,6 @@ current_path = os.getcwd()
 # ------------------------------------------- Global Variables ---------------------------------------------
 users_choice = "yes"
 db_items = []
-
 
 # ------------------------------------------------------ functions -----------------------------------------------
 def create_config_files():
@@ -21,6 +19,50 @@ def create_config_files():
     except:
         return print("Something Went Wrong When Creating Config Files...")
 
+def create_env_file():
+    env_file_content = ''
+    env_file_path = f'{current_path}/.env'
+    
+    try:
+        print("Attempting to create .env...")
+        write_to_file(env_file_path, env_file_content)
+        return print(".env Successfully Created...")
+    except Exception as e:
+        return print(f"Something Went Wrong When Creating .env: {e}")
+
+def create_gitignore():
+    gitignore_content = '''
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+'''
+    gitignore_path = f'{current_path}/.gitignore'
+    
+    try:
+        print("Attempting to create .gitignore...")
+        write_to_file(gitignore_path, gitignore_content)
+        return print(".gitignore Successfully Created...")
+    except Exception as e:
+        return print(f"Something Went Wrong When Creating .gitignore: {e}")
 
 def create_dockerfile():
     dockerfile_content = f'''
@@ -40,7 +82,8 @@ EXPOSE 5001
 
 CMD ["npm", "run", "dev"]
 '''
-    dockerfile_path = config_directory + "/Dockerfile"
+    dockerfile_path = f'{current_path}/Dockerfile'
+    
     try:
         print("Attempting to create Dockerfile...")
         write_to_file(dockerfile_path, dockerfile_content)
@@ -60,13 +103,30 @@ services:
       - ./:/server
       - /node_modules
 '''
-    docker_compose_path = config_directory + "/docker-compose.yml"
+    docker_compose_path = f'{current_path}/docker-compose.yml'
     try:
         print("Attempting to create docker-compose.yml...")
         write_to_file(docker_compose_path, docker_compose_content)
         return print("docker-compose.yml Successfully Created...")
     except Exception as e:
         return print(f"Something Went Wrong When Creating docker-compose.yml: {e}")
+      
+def create_app_yml():
+    app_yml_content = '''
+apps:
+  - script: ./index.js
+    cwd: /home/website/server/
+    name: "website"
+    interpreter: /usr/bin/node
+'''
+    app_yml_path = f'{current_path}/app.yml'
+    
+    try:
+        print("Attempting to create app.yml...")
+        write_to_file(app_yml_path, app_yml_content)
+        return print("app.yml Successfully Created...")
+    except Exception as e:
+        return print(f"Something Went Wrong When Creating app.yml: {e}")
 
 def create_controller_files(name, *args):
     controller_first = 'const '+name+' = require("../models/'+name+'"); exports.create'+name+' = async (req, res) => { try { let new'+name+' = new '+name+'({'
@@ -104,7 +164,6 @@ def create_models_files(name, *args):
     except:
         return print("Something Went Wrong When Creating Model Files...")
 
-
 def create_routes_files(name):
     routes_file = 'const express = require("express"); const router = express.Router(); const { create'+name+', read'+name+', read'+name+'FromID, update'+name+', delete'+name+', } = require("../controllers/'+name+'"); router.route("/create").post(create'+name+'); router.route("/read").get(read'+name+'); router.route("/read/:id").get(read'+name+'FromID); router.route("/update/:id").post(update'+name+'); router.route("/delete/:id").delete(delete'+name+'); module.exports = router; '
     routes_file_path = route_directory + f'/{name}.js'
@@ -113,7 +172,7 @@ def create_routes_files(name):
         return print("routes Files Successfully Created...")
     except:
         return print("Something Went Wrong When Creating routes Files...")
-        
+
 def create_index_file(name):
     index_file = 'const express = require("express"); const session = require("express-session"); const passport = require("passport"); const app = express(); const cors = require("cors"); const PORT = process.env.PORT || 3002; const User = require("./models/auth"); const connectDB = require("./config/mongoose"); require("dotenv").config({ path: "./.env" }); app.use(express.json()); app.use(express.urlencoded({ extended: false })); app.use(cors()); connectDB(); const LocalStrategy = require("passport-local").Strategy; passport.use(new LocalStrategy(User.authenticate())); app.use( session({ secret: process.env.ENCRYPT_KEY, resave: false, saveUninitialized: false, }) ); app.use(passport.initialize()); app.use(passport.session()); passport.use(User.createStrategy()); passport.serializeUser(function (user, done) { done(null, user.id); }); passport.deserializeUser(function (id, done) { User.findById(id, function (err, user) { done(err, user); }); }); app.get("/", (req, res) => { res.json({ app: "running" }); }); app.listen(PORT, () => { console.log("✅ Listening on port " + PORT); }); app.use("/api/' + name + '", require("./routes/' + name + '"));'
     index_file_path = f'{current_path}/index.js'
@@ -204,6 +263,12 @@ print("Adding config files...")
 create_config_files()
 print("Adding controller files...")
 create_controller_files(type_of_db, db_items)
+print("Adding .env file...")
+create_env_file()
+print("Adding  file...")
+create_gitignore()
+print("Adding app.yml file...")
+create_app_yml()
 print("Adding docker file...")
 create_dockerfile()
 print("Adding docker compose file...")
