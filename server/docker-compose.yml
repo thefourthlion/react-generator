@@ -1,0 +1,10 @@
+version: "25.0.2"
+services:
+  api:
+    build: /
+    container_name: server
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./:/server
+      - /node_modules

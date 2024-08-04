@@ -1,0 +1,1 @@
+const mongoose = require("mongoose"); const ClientsSchema = new mongoose.Schema( {name: { type: String, required: [true, "Please provide name"],  },phone: { type: String, required: [true, "Please provide phone"],  }, }, { timestamps: true } ); const Clients = mongoose.model("Clients", ClientsSchema); module.exports = Clients;

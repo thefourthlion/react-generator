@@ -1,0 +1,6 @@
+
+apps:
+  - script: ./index.js
+    cwd: /home/website/server/
+    name: "website"
+    interpreter: /usr/bin/node

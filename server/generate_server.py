@@ -19,18 +19,21 @@ def create_config_files():
     except:
         return print("Something Went Wrong When Creating Config Files...")
 
-def create_env_file():
+def create_env_file(current_path):
     env_file_content = ''
     env_file_path = f'{current_path}/.env'
     
     try:
+        if os.path.exists(env_file_path):
+            return print(".env file already exists.")
+        
         print("Attempting to create .env...")
         write_to_file(env_file_path, env_file_content)
         return print(".env Successfully Created...")
     except Exception as e:
         return print(f"Something Went Wrong When Creating .env: {e}")
 
-def create_gitignore():
+def create_gitignore(current_path):
     gitignore_content = '''
 # dependencies
 /node_modules
@@ -58,13 +61,16 @@ yarn-error.log*
     gitignore_path = f'{current_path}/.gitignore'
     
     try:
+        if os.path.exists(gitignore_path):
+            return print(".gitignore file already exists.")
+        
         print("Attempting to create .gitignore...")
         write_to_file(gitignore_path, gitignore_content)
         return print(".gitignore Successfully Created...")
     except Exception as e:
         return print(f"Something Went Wrong When Creating .gitignore: {e}")
 
-def create_dockerfile():
+def create_dockerfile(current_path):
     dockerfile_content = f'''
 FROM node:17-alpine
 
@@ -85,13 +91,16 @@ CMD ["npm", "run", "dev"]
     dockerfile_path = f'{current_path}/Dockerfile'
     
     try:
+        if os.path.exists(dockerfile_path):
+            return print("Dockerfile already exists.")
+        
         print("Attempting to create Dockerfile...")
         write_to_file(dockerfile_path, dockerfile_content)
         return print("Dockerfile Successfully Created...")
     except Exception as e:
         return print(f"Something Went Wrong When Creating Dockerfile: {e}")
 
-def create_docker_compose_file():
+def create_docker_compose_file(current_path):
     docker_compose_content = '''version: "25.0.2"
 services:
   api:
@@ -104,14 +113,18 @@ services:
       - /node_modules
 '''
     docker_compose_path = f'{current_path}/docker-compose.yml'
+    
     try:
+        if os.path.exists(docker_compose_path):
+            return print("docker-compose.yml already exists.")
+        
         print("Attempting to create docker-compose.yml...")
         write_to_file(docker_compose_path, docker_compose_content)
         return print("docker-compose.yml Successfully Created...")
     except Exception as e:
         return print(f"Something Went Wrong When Creating docker-compose.yml: {e}")
-      
-def create_app_yml():
+
+def create_app_yml(current_path):
     app_yml_content = '''
 apps:
   - script: ./index.js
@@ -122,11 +135,15 @@ apps:
     app_yml_path = f'{current_path}/app.yml'
     
     try:
+        if os.path.exists(app_yml_path):
+            return print("app.yml already exists.")
+        
         print("Attempting to create app.yml...")
         write_to_file(app_yml_path, app_yml_content)
         return print("app.yml Successfully Created...")
     except Exception as e:
         return print(f"Something Went Wrong When Creating app.yml: {e}")
+
 
 def create_controller_files(name, *args):
     controller_first = 'const '+name+' = require("../models/'+name+'"); exports.create'+name+' = async (req, res) => { try { let new'+name+' = new '+name+'({'
